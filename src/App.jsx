@@ -1,37 +1,43 @@
 import { useState } from 'react';
 import QuestionInput from './components/QuestionInput';
 import ResponseDisplay from './components/ResponseDisplay';
-import { mockResponses, getDefaultMockResponse } from './mockData';
+
+const API_URL = 'http://localhost:3006';
 
 function App() {
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [response, setResponse] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleQuestionSubmit = async (question) => {
     setIsLoading(true);
     setCurrentQuestion(question);
     setResponse(null);
+    setError(null);
 
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      const res = await fetch(`${API_URL}/api/ask`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question }),
+      });
 
-    // Check for matching mock responses based on keywords
-    const lowerQuestion = question.toLowerCase();
-    let mockResponse;
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to get response');
+      }
 
-    if (lowerQuestion.includes('force') || lowerQuestion.includes('newton') || lowerQuestion.includes('accelerat')) {
-      mockResponse = mockResponses['physics-force'];
-    } else if (lowerQuestion.includes('quadratic') || lowerQuestion.includes('x²') || lowerQuestion.includes('x^2') || lowerQuestion.includes('equation')) {
-      mockResponse = mockResponses['math-quadratic'];
-    } else if (lowerQuestion.includes('mole') || lowerQuestion.includes('water') || lowerQuestion.includes('h2o') || lowerQuestion.includes('chemistry')) {
-      mockResponse = mockResponses['chemistry-moles'];
-    } else {
-      mockResponse = getDefaultMockResponse(question);
+      const data = await res.json();
+      setResponse(data);
+    } catch (err) {
+      console.error('Error:', err);
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
-
-    setResponse(mockResponse);
-    setIsLoading(false);
   };
 
   return (
@@ -66,17 +72,41 @@ function App() {
                 </div>
               </div>
               <p className="text-gray-600 font-medium">Breaking down your question into steps...</p>
+              <p className="text-gray-400 text-sm">Grok is thinking...</p>
+            </div>
+          </div>
+        )}
+
+        {/* Error State */}
+        {!isLoading && error && (
+          <div className="mt-8 p-6 bg-red-50 border-2 border-red-200 rounded-2xl max-w-2xl mx-auto">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-semibold text-red-800">Something went wrong</h3>
+                <p className="text-red-600 mt-1">{error}</p>
+                <button
+                  onClick={() => handleQuestionSubmit(currentQuestion)}
+                  className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+                >
+                  Try Again
+                </button>
+              </div>
             </div>
           </div>
         )}
 
         {/* Response */}
-        {!isLoading && response && (
+        {!isLoading && !error && response && (
           <ResponseDisplay response={response} question={currentQuestion} />
         )}
 
         {/* Empty State */}
-        {!isLoading && !response && (
+        {!isLoading && !error && !response && (
           <div className="mt-16 text-center">
             <div className="inline-flex flex-col items-center gap-4 p-8 bg-white/40 rounded-2xl border border-gray-200">
               <div className="w-20 h-20 rounded-full bg-primary-100 flex items-center justify-center">
@@ -104,7 +134,7 @@ function App() {
 
       {/* Footer */}
       <footer className="mt-16 text-center text-gray-500 text-sm">
-        <p>Powered by AI — Learn at your own pace</p>
+        <p>Powered by Grok AI — Learn at your own pace</p>
       </footer>
     </div>
   );
