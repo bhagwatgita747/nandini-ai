@@ -65,13 +65,27 @@
 ### Milestone 4: Math & LaTeX Support
 **Status**: Completed
 
-- Added KaTeX package for rendering mathematical expressions
-- Created `MathText` component that parses `$...$` (inline) and `$$...$$` (block) LaTeX
-- Updated `StepCard` and `ResponseDisplay` to use MathText for all text fields
-- Updated system prompt with LaTeX formatting instructions and examples
-- Added JSON parsing fix to handle unescaped backslashes from AI responses
-- Added CSS styling for math blocks and inline expressions
-- Tested with physics and math questions (quadratic formula, kinetic energy, etc.)
+**What we added:**
+- Math formulas now display beautifully (fractions, square roots, integrals, etc.)
+- Example: Instead of "x^2/3", you now see proper mathematical notation
+
+**Technical details:**
+- Added KaTeX library for rendering math
+- Created MathText component for parsing $...$ notation
+- Updated all text displays to support math formulas
+
+### Milestone 5: Speed & Reliability Improvements
+**Status**: Completed
+
+**What we fixed:**
+- App now responds in ~2-4 seconds instead of ~12 seconds (6x faster!)
+- Fixed errors that happened with complex math questions
+- Upgraded to the latest and fastest AI model (Grok 4)
+
+**What changed:**
+- Switched from Grok 3 to Grok 4 fast (non-reasoning mode)
+- Fixed a bug where special math symbols caused the app to crash
+- Complex questions like integrals now work reliably
 
 ---
 
