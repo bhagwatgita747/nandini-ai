@@ -84,7 +84,7 @@ app.post('/api/ask', async (req, res) => {
         'Authorization': `Bearer ${process.env.XAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'grok-3-fast',
+        model: 'grok-4-fast-non-reasoning',  // Grok 4 fast without reasoning for speed
         messages: [
           {
             role: 'system',
