@@ -133,12 +133,18 @@ app.post('/api/ask', async (req, res) => {
       }
       cleanContent = cleanContent.trim();
 
-      // Fix unescaped backslashes in LaTeX expressions
-      // The AI outputs \frac, \sqrt, etc. but JSON needs \\frac, \\sqrt
-      // We need to escape backslashes that are followed by LaTeX commands
-      cleanContent = cleanContent.replace(/\\([a-zA-Z]+)/g, '\\\\$1');
+      // Try to parse as-is first (AI might have properly escaped)
+      try {
+        parsedResponse = JSON.parse(cleanContent);
+      } catch (firstParseError) {
+        // If parsing fails, fix unescaped backslashes in LaTeX expressions
+        // The AI outputs \frac, \sqrt, \, etc. but JSON needs them escaped
+        const fixedContent = cleanContent
+          .replace(/\\/g, '\\\\')  // Escape ALL backslashes
+          .replace(/\\\\"/g, '\\"');  // Restore \" (which became \\")
 
-      parsedResponse = JSON.parse(cleanContent);
+        parsedResponse = JSON.parse(fixedContent);
+      }
     } catch (parseError) {
       console.error('Failed to parse AI response:', aiContent);
       return res.status(500).json({
