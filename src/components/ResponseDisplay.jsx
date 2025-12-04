@@ -1,4 +1,5 @@
 import StepCard from './StepCard';
+import MathText from './MathText';
 
 const ResponseDisplay = ({ response, question }) => {
   if (!response) return null;
@@ -63,7 +64,7 @@ const ResponseDisplay = ({ response, question }) => {
             <div>
               <p className="text-primary-100 text-sm font-medium mb-1">Final Answer</p>
               <p className="text-white text-lg font-semibold leading-relaxed">
-                {response.final_answer}
+                <MathText text={response.final_answer} />
               </p>
             </div>
           </div>

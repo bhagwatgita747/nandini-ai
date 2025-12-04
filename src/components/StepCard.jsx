@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import MathText from './MathText';
 
 const StepCard = ({ step, totalSteps, isLast }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -101,7 +102,7 @@ const StepCard = ({ step, totalSteps, isLast }) => {
             {/* Thinking Prompt */}
             <div className="thinking-prompt">
               <p className="text-gray-800 font-medium text-lg leading-relaxed">
-                {step.thinking_prompt}
+                <MathText text={step.thinking_prompt} />
               </p>
               <p className={`text-sm mt-1 transition-colors duration-300 ${
                 isOpen ? 'text-green-600' : 'text-gray-500'
@@ -190,11 +191,11 @@ const StepCard = ({ step, totalSteps, isLast }) => {
                     </div>
                     <div className="flex-1">
                       <p className="answer-text font-bold text-green-800 text-xl">
-                        {step.answer}
+                        <MathText text={step.answer} />
                       </p>
                       {step.explanation && (
                         <p className="explanation-text mt-3 text-green-700 leading-relaxed bg-white/50 rounded-lg p-3 border border-green-200">
-                          {step.explanation}
+                          <MathText text={step.explanation} />
                         </p>
                       )}
                     </div>

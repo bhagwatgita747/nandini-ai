@@ -62,17 +62,20 @@
 - Created MILESTONES.md for tracking progress
 - Established upcoming feature roadmap
 
+### Milestone 4: Math & LaTeX Support
+**Status**: Completed
+
+- Added KaTeX package for rendering mathematical expressions
+- Created `MathText` component that parses `$...$` (inline) and `$$...$$` (block) LaTeX
+- Updated `StepCard` and `ResponseDisplay` to use MathText for all text fields
+- Updated system prompt with LaTeX formatting instructions and examples
+- Added JSON parsing fix to handle unescaped backslashes from AI responses
+- Added CSS styling for math blocks and inline expressions
+- Tested with physics and math questions (quadratic formula, kinetic energy, etc.)
+
 ---
 
 ## Upcoming Milestones
-
-### Milestone 4: Math & LaTeX Support
-**Priority**: High
-
-- [ ] Add KaTeX or MathJax for rendering mathematical expressions
-- [ ] Update system prompt to use LaTeX notation for formulas
-- [ ] Style math expressions to look clean and readable
-- [ ] Test with various math/physics/chemistry questions
 
 ### Milestone 5: Conversation History
 **Priority**: Medium
@@ -112,21 +115,27 @@
 
 ## API Response Structure
 
-The XAI API returns responses in this format:
+The XAI API returns responses in this format (with LaTeX notation for math):
 
 ```json
 {
-  "topic": "Physics - Newton's Laws",
-  "difficulty": "intermediate",
+  "topic": "Mathematics - Algebra",
+  "difficulty": "beginner",
   "steps": [
     {
       "step_number": 1,
-      "thinking_prompt": "What is the formula that relates force, mass, and acceleration?",
-      "answer": "F = ma (Force equals mass times acceleration)",
-      "explanation": "This is Newton's Second Law, which describes how force causes acceleration."
+      "thinking_prompt": "What is the general form of a quadratic equation?",
+      "answer": "The general form is $ax^2 + bx + c = 0$",
+      "explanation": "A quadratic equation is a second-degree polynomial where $a$, $b$, and $c$ are constants."
+    },
+    {
+      "step_number": 2,
+      "thinking_prompt": "Can you recall the quadratic formula?",
+      "answer": "The quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$",
+      "explanation": "This formula calculates the solutions for $x$ using the discriminant $b^2 - 4ac$."
     }
   ],
-  "final_answer": "The force required is 50 Newtons."
+  "final_answer": "The quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$."
 }
 ```
 

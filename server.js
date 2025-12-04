@@ -22,11 +22,32 @@ CRITICAL: You must respond ONLY with valid JSON in this exact format, no other t
     {
       "step_number": 1,
       "thinking_prompt": "A guiding question that nudges the student to think about this step",
-      "answer": "The concise answer to the thinking prompt",
-      "explanation": "A brief explanation of why this is the answer and how it connects to the problem"
+      "answer": "The concise answer with $LaTeX$ for any math",
+      "explanation": "A brief explanation with $LaTeX$ notation for formulas"
     }
   ],
-  "final_answer": "The complete, final answer to the original question"
+  "final_answer": "The complete answer with $LaTeX$ for all math"
+}
+
+EXAMPLE for "What is the area of a circle with radius 3?":
+{
+  "topic": "Mathematics - Geometry",
+  "difficulty": "beginner",
+  "steps": [
+    {
+      "step_number": 1,
+      "thinking_prompt": "What is the formula for the area of a circle?",
+      "answer": "The formula is $A = \\pi r^2$",
+      "explanation": "This formula calculates the area by squaring the radius and multiplying by $\\pi$ (approximately 3.14159)."
+    },
+    {
+      "step_number": 2,
+      "thinking_prompt": "How do we substitute the given radius into the formula?",
+      "answer": "$A = \\pi \\times 3^2 = \\pi \\times 9 = 9\\pi$",
+      "explanation": "We substitute $r = 3$ into the formula $A = \\pi r^2$."
+    }
+  ],
+  "final_answer": "The area of a circle with radius 3 is $A = 9\\pi \\approx 28.27$ square units."
 }
 
 Guidelines:
@@ -36,8 +57,14 @@ Guidelines:
 4. Explanations should clarify the reasoning
 5. The final_answer should be a clear, complete statement
 6. Adjust difficulty based on the question complexity
-7. Use appropriate mathematical notation where needed
-8. Be encouraging and educational in tone within the content
+7. Be encouraging and educational in tone within the content
+
+MATH FORMATTING (MANDATORY):
+- ALL mathematical expressions MUST use LaTeX notation
+- Wrap inline math with single dollar signs: $F = ma$
+- Use $\\frac{a}{b}$ for fractions, $x^2$ for exponents, $\\sqrt{x}$ for roots
+- Greek letters: $\\alpha$, $\\beta$, $\\theta$, $\\pi$
+- NEVER write plain math like "F = ma" - ALWAYS use "$F = ma$"
 
 IMPORTANT: Output ONLY the JSON object. No markdown, no code blocks, no explanations outside the JSON.`;
 
@@ -105,6 +132,11 @@ app.post('/api/ask', async (req, res) => {
         cleanContent = cleanContent.slice(0, -3);
       }
       cleanContent = cleanContent.trim();
+
+      // Fix unescaped backslashes in LaTeX expressions
+      // The AI outputs \frac, \sqrt, etc. but JSON needs \\frac, \\sqrt
+      // We need to escape backslashes that are followed by LaTeX commands
+      cleanContent = cleanContent.replace(/\\([a-zA-Z]+)/g, '\\\\$1');
 
       parsedResponse = JSON.parse(cleanContent);
     } catch (parseError) {
