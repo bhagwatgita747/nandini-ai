@@ -53,14 +53,14 @@ const StepCard = ({ step, totalSteps, isLast }) => {
       {/* Connection line to next step */}
       {!isLast && (
         <div className={`absolute left-8 top-full w-0.5 h-6 transition-colors duration-500 ${
-          isOpen ? 'bg-gradient-to-b from-green-400 to-green-300' : 'bg-gradient-to-b from-primary-300 to-primary-200'
+          isOpen ? 'bg-gradient-to-b from-green-400 to-green-300' : 'bg-gradient-to-b from-primary-300 dark:from-primary-700 to-primary-200 dark:to-primary-800'
         }`} />
       )}
 
       <div className={`
-        bg-white rounded-2xl shadow-md hover:shadow-lg
+        bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-lg
         border-2 transition-all duration-300
-        ${isOpen ? 'card-revealed shadow-xl' : 'border-gray-100'}
+        ${isOpen ? 'card-revealed shadow-xl' : 'border-gray-100 dark:border-gray-700'}
       `}>
         {/* Step Header */}
         <div className="flex items-start gap-4 p-5">
@@ -73,8 +73,8 @@ const StepCard = ({ step, totalSteps, isLast }) => {
               ${isOpen
                 ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white badge-celebrate'
                 : hasBeenRevealed
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-primary-100 text-primary-700'}
+                  ? 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300'
+                  : 'bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300'}
             `}>
               {isOpen || hasBeenRevealed ? (
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,11 +101,11 @@ const StepCard = ({ step, totalSteps, isLast }) => {
           <div className="flex-1 min-w-0">
             {/* Thinking Prompt */}
             <div className="thinking-prompt">
-              <p className="text-gray-800 font-medium text-lg leading-relaxed">
+              <p className="text-gray-800 dark:text-gray-200 font-medium text-lg leading-relaxed">
                 <MathText text={step.thinking_prompt} />
               </p>
               <p className={`text-sm mt-1 transition-colors duration-300 ${
-                isOpen ? 'text-green-600' : 'text-gray-500'
+                isOpen ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'
               }`}>
                 {isOpen
                   ? `Step ${step.step_number} of ${totalSteps} — Revealed!`
@@ -123,7 +123,7 @@ const StepCard = ({ step, totalSteps, isLast }) => {
                 mt-4 flex items-center gap-2 px-5 py-2.5 rounded-xl
                 font-semibold text-sm transition-all duration-200
                 ${isOpen
-                  ? 'bg-gray-100 text-gray-600 hover:bg-gray-200 hide-btn-animate'
+                  ? 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 hide-btn-animate'
                   : 'bg-gradient-to-r from-primary-600 via-primary-600 to-indigo-600 text-white hover:from-primary-700 hover:via-primary-700 hover:to-indigo-700 shadow-lg hover:shadow-xl hover:scale-[1.02]'}
               `}
             >
@@ -166,7 +166,7 @@ const StepCard = ({ step, totalSteps, isLast }) => {
               `}
             >
               {isOpen && (
-                <div className="answer-reveal answer-glow answer-shimmer bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 border-2 border-green-300 rounded-xl p-5 relative">
+                <div className="answer-reveal answer-glow answer-shimmer bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 border-2 border-green-300 dark:border-green-700 rounded-xl p-5 relative">
                   {/* Confetti burst */}
                   {showConfetti && confettiPieces.map((piece, i) => (
                     <div
@@ -190,11 +190,11 @@ const StepCard = ({ step, totalSteps, isLast }) => {
                       </svg>
                     </div>
                     <div className="flex-1">
-                      <p className="answer-text font-bold text-green-800 text-xl">
+                      <p className="answer-text font-bold text-green-800 dark:text-green-200 text-xl">
                         <MathText text={step.answer} />
                       </p>
                       {step.explanation && (
-                        <p className="explanation-text mt-3 text-green-700 leading-relaxed bg-white/50 rounded-lg p-3 border border-green-200">
+                        <p className="explanation-text mt-3 text-green-700 dark:text-green-300 leading-relaxed bg-white/50 dark:bg-gray-800/50 rounded-lg p-3 border border-green-200 dark:border-green-800">
                           <MathText text={step.explanation} />
                         </p>
                       )}

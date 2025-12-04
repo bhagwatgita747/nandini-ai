@@ -103,18 +103,23 @@
 - Shows time stamps like "5m ago", "2h ago", etc.
 - Quick topic badges to identify questions at a glance
 
+### Milestone 7: UI/UX Polish
+**Status**: Completed
+
+**What we added:**
+- Dark mode toggle (sun/moon icon in top-right corner)
+- Your theme preference is saved automatically
+- Keyboard shortcut: Press Ctrl + Enter to submit your question
+- All components now look great in both light and dark modes
+
+**How to use:**
+- Click the sun/moon icon in the top-right corner to switch themes
+- Your preference is saved in your browser
+- It also respects your system's dark mode setting by default
+
 ---
 
 ## Upcoming Milestones
-
-### Milestone 7: UI/UX Polish
-**Priority**: Medium
-
-- [ ] Improve mobile responsiveness
-- [ ] Add dark mode toggle
-- [ ] Add subject category chips for quick topic selection
-- [ ] Improve loading skeleton animations
-- [ ] Add keyboard shortcuts (Enter to submit, etc.)
 
 ### Milestone 8: Enhanced Error Handling & Retry Logic
 **Priority**: Low
