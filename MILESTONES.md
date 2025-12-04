@@ -87,19 +87,27 @@
 - Fixed a bug where special math symbols caused the app to crash
 - Complex questions like integrals now work reliably
 
+### Milestone 6: Conversation History
+**Status**: Completed
+
+**What we added:**
+- History sidebar that shows all your previous questions
+- Click the clock icon (top left) to see your question history
+- Click any past question to instantly view it again
+- Delete individual questions or clear all history
+- Your history is saved even if you close the browser
+
+**How it works:**
+- Questions are saved automatically when you get an answer
+- History stays on your device (stored in your browser)
+- Shows time stamps like "5m ago", "2h ago", etc.
+- Quick topic badges to identify questions at a glance
+
 ---
 
 ## Upcoming Milestones
 
-### Milestone 5: Conversation History
-**Priority**: Medium
-
-- [ ] Add sidebar or dropdown for question history
-- [ ] Store questions/answers in localStorage
-- [ ] Allow users to revisit previous questions
-- [ ] Add "Clear History" option
-
-### Milestone 6: UI/UX Polish
+### Milestone 7: UI/UX Polish
 **Priority**: Medium
 
 - [ ] Improve mobile responsiveness
@@ -108,7 +116,7 @@
 - [ ] Improve loading skeleton animations
 - [ ] Add keyboard shortcuts (Enter to submit, etc.)
 
-### Milestone 7: Enhanced Error Handling & Retry Logic
+### Milestone 8: Enhanced Error Handling & Retry Logic
 **Priority**: Low
 
 - [ ] Add exponential backoff for API failures
@@ -116,7 +124,7 @@
 - [ ] Add offline detection and messaging
 - [ ] Implement request timeout handling
 
-### Milestone 8: Deployment
+### Milestone 9: Deployment
 **Priority**: Low
 
 - [ ] Set up production build configuration

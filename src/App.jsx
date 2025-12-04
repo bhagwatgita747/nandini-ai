@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import QuestionInput from './components/QuestionInput';
 import ResponseDisplay from './components/ResponseDisplay';
+import HistorySidebar from './components/HistorySidebar';
+import useHistory from './hooks/useHistory';
 
 const API_URL = 'http://localhost:3006';
 
@@ -9,6 +11,9 @@ function App() {
   const [response, setResponse] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const { history, addToHistory, removeFromHistory, clearHistory } = useHistory();
 
   const handleQuestionSubmit = async (question) => {
     setIsLoading(true);
@@ -32,6 +37,9 @@ function App() {
 
       const data = await res.json();
       setResponse(data);
+
+      // Add to history on successful response
+      addToHistory(question, data);
     } catch (err) {
       console.error('Error:', err);
       setError(err.message || 'Something went wrong. Please try again.');
@@ -40,8 +48,27 @@ function App() {
     }
   };
 
+  const handleSelectHistoryItem = (item) => {
+    setCurrentQuestion(item.question);
+    setResponse(item.response);
+    setError(null);
+    setIsSidebarOpen(false);
+    // Scroll to top to see the response
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen py-8 px-4">
+      {/* History Sidebar */}
+      <HistorySidebar
+        history={history}
+        onSelectItem={handleSelectHistoryItem}
+        onDeleteItem={removeFromHistory}
+        onClearHistory={clearHistory}
+        isOpen={isSidebarOpen}
+        onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+      />
+
       {/* Header */}
       <header className="text-center mb-12">
         <div className="inline-flex items-center gap-3 mb-4">
