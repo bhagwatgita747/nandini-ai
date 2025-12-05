@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.vercel.nandini_ai.twa",
+        "sha256_cert_fingerprints": ["5B:38:30:47:B7:DC:E0:77:50:42:BA:94:A9:69:EA:19:4F:73:36:97:46:8A:67:3F:BF:E3:88:E0:E0:E1:55:7B"]
+      }
+    }]
