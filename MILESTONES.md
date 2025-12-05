@@ -14,9 +14,11 @@
 
 ### Tech Stack
 - **Frontend**: React + Vite + Tailwind CSS
-- **Backend**: Express.js
-- **AI**: XAI API (Grok model)
-- **Ports**: Frontend on 3005, Backend on 3006
+- **Backend**: Express.js (local) / Vercel Serverless Functions (production)
+- **AI**: XAI API (Grok 4 fast model)
+- **Deployment**: Vercel (frontend + backend)
+- **PWA**: Service Worker + Web App Manifest
+- **Ports (local)**: Frontend on 3005, Backend on 3006
 
 ---
 
@@ -134,18 +136,38 @@
 - Frontend: Added `isOffline` state with online/offline event listeners
 - Frontend: Enhanced error display with different styles for different error types
 
----
+### Milestone 9: Deployment & PWA Support
+**Status**: Completed
 
-## Upcoming Milestones
+**What we added:**
+- Vercel deployment configuration (frontend + serverless backend)
+- PWA (Progressive Web App) support for mobile installation
+- Service worker for offline caching
+- App manifest for "Add to Home Screen" functionality
 
-### Milestone 9: Deployment
-**Priority**: Low
+**Deployment setup:**
+- Created `api/ask.js` and `api/health.js` as Vercel serverless functions
+- Added `vercel.json` for routing and CORS configuration
+- Updated frontend to use relative API URLs in production
 
-- [ ] Set up production build configuration
-- [ ] Deploy frontend to Vercel/Netlify
-- [ ] Deploy backend to Railway/Render
-- [ ] Configure environment variables for production
-- [ ] Set up custom domain (optional)
+**PWA features:**
+- Manifest with app name, icons, and theme colors
+- Service worker with cache-first strategy for static assets
+- Network-first strategy for API calls with offline fallback
+- Ready for TWA (Trusted Web Activity) wrapper for Play Store
+
+**How to deploy to Vercel:**
+1. Push code to GitHub
+2. Connect repository to Vercel
+3. Add `XAI_API_KEY` environment variable in Vercel dashboard
+4. Deploy!
+
+**How to create Play Store app (TWA):**
+1. Deploy to Vercel first (need HTTPS URL)
+2. Use PWABuilder (https://pwabuilder.com) or Bubblewrap
+3. Enter your Vercel URL
+4. Generate Android APK/AAB
+5. Upload to Play Store
 
 ---
 

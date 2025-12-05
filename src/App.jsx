@@ -6,7 +6,8 @@ import ThemeToggle from './components/ThemeToggle';
 import useHistory from './hooks/useHistory';
 import useTheme from './hooks/useTheme';
 
-const API_URL = 'http://localhost:3006';
+// In production (Vercel), use relative URL. In development, use local server.
+const API_URL = import.meta.env.PROD ? '' : 'http://localhost:3006';
 
 function App() {
   const [currentQuestion, setCurrentQuestion] = useState('');
