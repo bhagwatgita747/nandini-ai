@@ -5,7 +5,15 @@
 body {
   font-family: 'Inter', system-ui, sans-serif;
   min-height: 100vh;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: #f8fafc;
+}
+
+/* Dark mode body */
+.dark body,
+html.dark body {
+  background-color: #111827;
+  color: #f9fafb;
 }
 
 /* Dark mode scrollbar */
