@@ -27,14 +27,14 @@ const HistorySidebar = ({ history, onSelectItem, onDeleteItem, onClearHistory, i
 
   return (
     <>
-      {/* Toggle Button - Fixed position */}
+      {/* Toggle Button - Fixed position with safe area */}
       <button
         onClick={onToggle}
-        className="fixed top-4 left-4 z-50 p-3 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 group"
+        className="fixed top-3 left-3 sm:top-4 sm:left-4 z-50 p-2.5 sm:p-3 min-w-[44px] min-h-[44px] bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl active:shadow-md transition-all duration-200 border border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 group mt-safe"
         title={isOpen ? 'Close History' : 'Open History'}
       >
         <svg
-          className={`w-6 h-6 text-gray-600 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-5 h-5 sm:w-6 sm:h-6 text-gray-600 dark:text-gray-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -60,14 +60,14 @@ const HistorySidebar = ({ history, onSelectItem, onDeleteItem, onClearHistory, i
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - Full width on mobile */}
       <div className={`
-        fixed top-0 left-0 h-full w-80 bg-white dark:bg-gray-900 shadow-2xl z-50
+        fixed top-0 left-0 h-full w-full sm:w-80 bg-white dark:bg-gray-900 shadow-2xl z-50
         transform transition-transform duration-300 ease-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
-        {/* Header */}
-        <div className="p-5 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-primary-50 dark:from-gray-800 to-white dark:to-gray-900">
+        {/* Header with safe area */}
+        <div className="p-4 sm:p-5 pt-safe border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-primary-50 dark:from-gray-800 to-white dark:to-gray-900">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center">
@@ -82,7 +82,7 @@ const HistorySidebar = ({ history, onSelectItem, onDeleteItem, onClearHistory, i
             </div>
             <button
               onClick={onToggle}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              className="p-2.5 min-w-[44px] min-h-[44px] hover:bg-gray-100 dark:hover:bg-gray-800 active:bg-gray-200 dark:active:bg-gray-700 rounded-lg transition-colors flex items-center justify-center"
             >
               <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -113,7 +113,7 @@ const HistorySidebar = ({ history, onSelectItem, onDeleteItem, onClearHistory, i
                 >
                   <button
                     onClick={() => onSelectItem(item)}
-                    className="w-full text-left p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-primary-50 dark:hover:bg-gray-700 border border-transparent hover:border-primary-200 dark:hover:border-primary-700 transition-all duration-200"
+                    className="w-full text-left p-4 min-h-[60px] rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-primary-50 dark:hover:bg-gray-700 active:bg-primary-100 dark:active:bg-gray-600 border border-transparent hover:border-primary-200 dark:hover:border-primary-700 transition-all duration-200"
                   >
                     <div className="flex items-start gap-3">
                       <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-white dark:bg-gray-700 shadow-sm flex items-center justify-center text-xs font-bold text-primary-600 dark:text-primary-400">

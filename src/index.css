@@ -2,9 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   MOBILE-FIRST & SAFE AREA SUPPORT
+   ============================================ */
+
+/* Safe area insets for notched phones */
+:root {
+  --sat: env(safe-area-inset-top);
+  --sar: env(safe-area-inset-right);
+  --sab: env(safe-area-inset-bottom);
+  --sal: env(safe-area-inset-left);
+}
+
+/* Safe area utilities */
+.pt-safe {
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+}
+
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+.mt-safe {
+  margin-top: env(safe-area-inset-top);
+}
+
+/* Hide scrollbar for horizontal scroll areas */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Prevent text selection on buttons for mobile */
+button {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Smooth touch scrolling */
+.overflow-y-auto,
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent bounce scroll on iOS */
+html, body {
+  overscroll-behavior: none;
+}
+
 body {
   font-family: 'Inter', system-ui, sans-serif;
   min-height: 100vh;
+  min-height: 100dvh; /* Use dynamic viewport height for mobile */
   transition: background-color 0.3s ease, color 0.3s ease;
   background-color: #f8fafc;
 }

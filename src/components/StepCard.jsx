@@ -52,24 +52,24 @@ const StepCard = ({ step, totalSteps, isLast }) => {
     <div className="relative">
       {/* Connection line to next step */}
       {!isLast && (
-        <div className={`absolute left-8 top-full w-0.5 h-6 transition-colors duration-500 ${
+        <div className={`absolute left-5 sm:left-8 top-full w-0.5 h-4 sm:h-6 transition-colors duration-500 ${
           isOpen ? 'bg-gradient-to-b from-green-400 to-green-300' : 'bg-gradient-to-b from-primary-300 dark:from-primary-700 to-primary-200 dark:to-primary-800'
         }`} />
       )}
 
       <div className={`
-        bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-lg
+        bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-md hover:shadow-lg
         border-2 transition-all duration-300
         ${isOpen ? 'card-revealed shadow-xl' : 'border-gray-100 dark:border-gray-700'}
       `}>
         {/* Step Header */}
-        <div className="flex items-start gap-4 p-5">
+        <div className="flex items-start gap-3 sm:gap-4 p-3 sm:p-5">
           {/* Step Number Badge */}
           <div className="relative">
             <div className={`
-              flex-shrink-0 w-12 h-12 rounded-xl
+              flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl
               flex items-center justify-center
-              font-bold text-lg transition-all duration-300
+              font-bold text-base sm:text-lg transition-all duration-300
               ${isOpen
                 ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white badge-celebrate'
                 : hasBeenRevealed
@@ -77,7 +77,7 @@ const StepCard = ({ step, totalSteps, isLast }) => {
                   : 'bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300'}
             `}>
               {isOpen || hasBeenRevealed ? (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     className={isOpen ? "checkmark-icon" : ""}
                     strokeLinecap="round"
@@ -101,15 +101,15 @@ const StepCard = ({ step, totalSteps, isLast }) => {
           <div className="flex-1 min-w-0">
             {/* Thinking Prompt */}
             <div className="thinking-prompt">
-              <p className="text-gray-800 dark:text-gray-200 font-medium text-lg leading-relaxed">
+              <p className="text-gray-800 dark:text-gray-200 font-medium text-base sm:text-lg leading-relaxed">
                 <MathText text={step.thinking_prompt} />
               </p>
-              <p className={`text-sm mt-1 transition-colors duration-300 ${
+              <p className={`text-xs sm:text-sm mt-1 transition-colors duration-300 ${
                 isOpen ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'
               }`}>
                 {isOpen
-                  ? `Step ${step.step_number} of ${totalSteps} — Revealed!`
-                  : `Step ${step.step_number} of ${totalSteps} — Think about this, then reveal`
+                  ? `Step ${step.step_number}/${totalSteps} — Revealed!`
+                  : `Step ${step.step_number}/${totalSteps} — Tap to reveal`
                 }
               </p>
             </div>
@@ -120,11 +120,11 @@ const StepCard = ({ step, totalSteps, isLast }) => {
               onClick={handleReveal}
               className={`
                 reveal-btn relative overflow-hidden
-                mt-4 flex items-center gap-2 px-5 py-2.5 rounded-xl
+                mt-3 sm:mt-4 w-full sm:w-auto flex items-center justify-center sm:justify-start gap-2 px-4 sm:px-5 py-2.5 sm:py-2.5 min-h-[44px] rounded-xl
                 font-semibold text-sm transition-all duration-200
                 ${isOpen
-                  ? 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 hide-btn-animate'
-                  : 'bg-gradient-to-r from-primary-600 via-primary-600 to-indigo-600 text-white hover:from-primary-700 hover:via-primary-700 hover:to-indigo-700 shadow-lg hover:shadow-xl hover:scale-[1.02]'}
+                  ? 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 active:bg-gray-200 dark:active:bg-gray-600 hide-btn-animate'
+                  : 'bg-gradient-to-r from-primary-600 via-primary-600 to-indigo-600 text-white hover:from-primary-700 hover:via-primary-700 hover:to-indigo-700 active:from-primary-800 active:via-primary-800 active:to-indigo-800 shadow-lg hover:shadow-xl active:shadow-md'}
               `}
             >
               {/* Ripple effects */}
@@ -161,12 +161,12 @@ const StepCard = ({ step, totalSteps, isLast }) => {
             {/* Answer Section (Accordion) */}
             <div
               className={`
-                accordion-content mt-4 rounded-xl
+                accordion-content mt-3 sm:mt-4 rounded-lg sm:rounded-xl
                 ${isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}
               `}
             >
               {isOpen && (
-                <div className="answer-reveal answer-glow answer-shimmer bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 border-2 border-green-300 dark:border-green-700 rounded-xl p-5 relative">
+                <div className="answer-reveal answer-glow answer-shimmer bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-900/20 dark:via-emerald-900/20 dark:to-teal-900/20 border-2 border-green-300 dark:border-green-700 rounded-lg sm:rounded-xl p-3 sm:p-5 relative">
                   {/* Confetti burst */}
                   {showConfetti && confettiPieces.map((piece, i) => (
                     <div
@@ -177,9 +177,9 @@ const StepCard = ({ step, totalSteps, isLast }) => {
                   ))}
 
                   {/* Answer */}
-                  <div className="flex items-start gap-4">
-                    <div className="checkmark-circle flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="checkmark-circle flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
                           className="checkmark-icon"
                           strokeLinecap="round"
@@ -189,12 +189,12 @@ const StepCard = ({ step, totalSteps, isLast }) => {
                         />
                       </svg>
                     </div>
-                    <div className="flex-1">
-                      <p className="answer-text font-bold text-green-800 dark:text-green-200 text-xl">
+                    <div className="flex-1 min-w-0">
+                      <p className="answer-text font-bold text-green-800 dark:text-green-200 text-base sm:text-xl break-words">
                         <MathText text={step.answer} />
                       </p>
                       {step.explanation && (
-                        <p className="explanation-text mt-3 text-green-700 dark:text-green-300 leading-relaxed bg-white/50 dark:bg-gray-800/50 rounded-lg p-3 border border-green-200 dark:border-green-800">
+                        <p className="explanation-text mt-2 sm:mt-3 text-green-700 dark:text-green-300 leading-relaxed bg-white/50 dark:bg-gray-800/50 rounded-lg p-2 sm:p-3 border border-green-200 dark:border-green-800 text-sm sm:text-base">
                           <MathText text={step.explanation} />
                         </p>
                       )}
