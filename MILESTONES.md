@@ -18,7 +18,14 @@
 - **AI**: XAI API (Grok 4 fast model)
 - **Deployment**: Vercel (frontend + backend)
 - **PWA**: Service Worker + Web App Manifest
+- **Android App**: TWA (Trusted Web Activity) via PWABuilder
 - **Ports (local)**: Frontend on 3005, Backend on 3006
+
+### Live URLs
+- **Web App**: https://nandini-ai.vercel.app
+- **GitHub**: https://github.com/bhagwatgita747/nandini-ai
+- **PWA Manifest**: https://nandini-ai.vercel.app/manifest.json
+- **TWA Verification**: https://nandini-ai.vercel.app/.well-known/assetlinks.json
 
 ---
 
@@ -156,18 +163,74 @@
 - Network-first strategy for API calls with offline fallback
 - Ready for TWA (Trusted Web Activity) wrapper for Play Store
 
-**How to deploy to Vercel:**
-1. Push code to GitHub
-2. Connect repository to Vercel
-3. Add `XAI_API_KEY` environment variable in Vercel dashboard
-4. Deploy!
+**Files created:**
+- `api/ask.js` - Vercel serverless function for AI queries
+- `api/health.js` - Health check endpoint
+- `vercel.json` - Vercel configuration
+- `public/manifest.json` - PWA manifest
+- `public/sw.js` - Service worker
 
-**How to create Play Store app (TWA):**
-1. Deploy to Vercel first (need HTTPS URL)
-2. Use PWABuilder (https://pwabuilder.com) or Bubblewrap
-3. Enter your Vercel URL
-4. Generate Android APK/AAB
-5. Upload to Play Store
+### Milestone 10: GitHub Integration & Android APK Generation
+**Status**: Completed
+
+**What we added:**
+- GitHub repository setup and integration
+- Automated deployment pipeline (push to GitHub → auto-deploy to Vercel)
+- PWA assets generation (icons, screenshots, feature graphic)
+- Android APK/AAB generation via PWABuilder
+- TWA verification for fullscreen app experience
+
+**GitHub Setup:**
+- Repository: https://github.com/bhagwatgita747/nandini-ai
+- Connected to Vercel for automatic deployments
+- Every `git push` triggers a new deployment
+
+**PWA Assets Generated:**
+- App icons: 48x48, 72x72, 96x96, 144x144, 192x192, 512x512 (PNG)
+- Screenshots: 3 phone mockups (1080x1920)
+- Feature graphic: 1024x500 (for Play Store banner)
+- All assets auto-detected by PWABuilder from manifest.json
+
+**Android App:**
+- Generated using PWABuilder (https://pwabuilder.com)
+- Package name: `app.vercel.nandini_ai.twa`
+- TWA verification configured via `/.well-known/assetlinks.json`
+- App runs fullscreen without browser bar
+
+**Files created:**
+- `public/.well-known/assetlinks.json` - TWA verification
+- `public/icon-*.png` - App icons in various sizes
+- `public/screenshot-*.png` - App screenshots
+- `public/feature-graphic.png` - Play Store banner
+- `scripts/generate-assets.cjs` - Asset generation script
+- `pwa-assets/` - Backup copy of all assets
+
+**Android Build Outputs (from PWABuilder):**
+- `Nandini AI.apk` - Direct install on Android devices
+- `Nandini AI.aab` - Upload to Google Play Store
+- `signing.keystore` - **IMPORTANT: Keep safe for app updates!**
+- `signing-key-info.txt` - Signing key passwords
+- `assetlinks.json` - TWA verification file (already deployed)
+
+---
+
+## Important Files & Credentials
+
+### Environment Variables
+```
+XAI_API_KEY=<your-xai-api-key>
+```
+Set in Vercel dashboard under Project Settings → Environment Variables
+
+### Signing Key (CRITICAL)
+**Location:** `signing.keystore` (from PWABuilder download)
+**Purpose:** Required for all future Android app updates
+**Action:** Back up this file securely! If lost, you cannot update your Play Store app.
+
+### GitHub Token
+**Type:** Classic Personal Access Token
+**Scope:** `repo` (full control of private repositories)
+**Usage:** For pushing code from CLI
 
 ---
 
@@ -199,7 +262,7 @@ The XAI API returns responses in this format (with LaTeX notation for math):
 
 ---
 
-## Running the Project
+## Running the Project Locally
 
 ```bash
 # Install dependencies
@@ -214,8 +277,66 @@ npm run server
 
 ---
 
+## Deployment Commands
+
+```bash
+# Push to GitHub (triggers Vercel auto-deploy)
+git add -A
+git commit -m "Your commit message"
+git push
+
+# Generate PWA assets (if needed)
+node scripts/generate-assets.cjs
+```
+
+---
+
+## Project Structure
+
+```
+nandini-ai/
+├── api/                    # Vercel serverless functions
+│   ├── ask.js             # Main AI query endpoint
+│   └── health.js          # Health check endpoint
+├── public/                 # Static assets
+│   ├── .well-known/       # TWA verification
+│   │   └── assetlinks.json
+│   ├── icon-*.png         # App icons (various sizes)
+│   ├── screenshot-*.png   # App screenshots
+│   ├── feature-graphic.png # Play Store banner
+│   ├── manifest.json      # PWA manifest
+│   └── sw.js              # Service worker
+├── src/                    # React frontend source
+│   ├── components/        # React components
+│   ├── App.jsx           # Main app component
+│   └── main.jsx          # Entry point
+├── scripts/               # Utility scripts
+│   └── generate-assets.cjs # PWA asset generator
+├── pwa-assets/            # Backup of generated assets
+├── server.js              # Local Express server
+├── vercel.json            # Vercel configuration
+├── package.json           # Dependencies
+└── MILESTONES.md          # This file
+```
+
+---
+
+## Future Enhancements (Ideas)
+
+- [ ] User accounts and cloud sync
+- [ ] Multiple AI model options
+- [ ] Subject-specific modes (Math, Physics, Chemistry)
+- [ ] Progress tracking and learning analytics
+- [ ] Voice input/output
+- [ ] Share questions via link
+- [ ] Collaborative learning mode
+
+---
+
 ## Notes
 
 - The `.env` file contains the XAI API key and is excluded from git
 - All step answers are pre-fetched in a single API call for seamless UX
 - Animations are designed to make learning feel rewarding and engaging
+- The app works offline for previously cached content
+- Android app requires TWA verification to run without browser bar
