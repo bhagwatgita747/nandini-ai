@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import QuestionInput from './components/QuestionInput';
 import ResponseDisplay from './components/ResponseDisplay';
 import HistorySidebar from './components/HistorySidebar';
@@ -13,16 +13,40 @@ function App() {
   const [response, setResponse] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [errorInfo, setErrorInfo] = useState(null); // { code, retryable }
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
   const { history, addToHistory, removeFromHistory, clearHistory } = useHistory();
   const { isDark, toggleTheme } = useTheme();
 
+  // Offline detection
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
   const handleQuestionSubmit = async (question) => {
+    // Check if offline
+    if (isOffline) {
+      setError('You are offline. Please check your internet connection.');
+      setErrorInfo({ code: 'OFFLINE', retryable: true });
+      return;
+    }
+
     setIsLoading(true);
     setCurrentQuestion(question);
     setResponse(null);
     setError(null);
+    setErrorInfo(null);
 
     try {
       const res = await fetch(`${API_URL}/api/ask`, {
@@ -33,19 +57,28 @@ function App() {
         body: JSON.stringify({ question }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to get response');
+        setError(data.error || 'Failed to get response');
+        setErrorInfo({ code: data.code, retryable: data.retryable });
+        return;
       }
 
-      const data = await res.json();
       setResponse(data);
 
       // Add to history on successful response
       addToHistory(question, data);
     } catch (err) {
       console.error('Error:', err);
-      setError(err.message || 'Something went wrong. Please try again.');
+      // Check if it's a network error
+      if (err.name === 'TypeError' && err.message.includes('fetch')) {
+        setError('Cannot connect to the server. Please make sure the server is running.');
+        setErrorInfo({ code: 'CONNECTION_ERROR', retryable: true });
+      } else {
+        setError(err.message || 'Something went wrong. Please try again.');
+        setErrorInfo({ code: 'UNKNOWN_ERROR', retryable: true });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -74,6 +107,18 @@ function App() {
 
       {/* Theme Toggle */}
       <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
+
+      {/* Offline Banner */}
+      {isOffline && (
+        <div className="fixed top-0 left-0 right-0 z-40 bg-yellow-500 text-yellow-900 px-4 py-2 text-center font-medium shadow-md">
+          <div className="flex items-center justify-center gap-2">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414" />
+            </svg>
+            <span>You are offline. Please check your internet connection.</span>
+          </div>
+        </div>
+      )}
 
       {/* Header */}
       <header className="text-center mb-12">
@@ -112,22 +157,59 @@ function App() {
 
         {/* Error State */}
         {!isLoading && error && (
-          <div className="mt-8 p-6 bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-2xl max-w-2xl mx-auto">
+          <div className={`mt-8 p-6 rounded-2xl max-w-2xl mx-auto border-2 ${
+            errorInfo?.code === 'OFFLINE' || errorInfo?.code === 'CONNECTION_ERROR'
+              ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800'
+              : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
+          }`}>
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center">
-                <svg className="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+              <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+                errorInfo?.code === 'OFFLINE' || errorInfo?.code === 'CONNECTION_ERROR'
+                  ? 'bg-yellow-100 dark:bg-yellow-900/50'
+                  : 'bg-red-100 dark:bg-red-900/50'
+              }`}>
+                {errorInfo?.code === 'OFFLINE' || errorInfo?.code === 'CONNECTION_ERROR' ? (
+                  <svg className="w-6 h-6 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                )}
               </div>
-              <div>
-                <h3 className="font-semibold text-red-800 dark:text-red-300">Something went wrong</h3>
-                <p className="text-red-600 dark:text-red-400 mt-1">{error}</p>
-                <button
-                  onClick={() => handleQuestionSubmit(currentQuestion)}
-                  className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
-                >
-                  Try Again
-                </button>
+              <div className="flex-1">
+                <h3 className={`font-semibold ${
+                  errorInfo?.code === 'OFFLINE' || errorInfo?.code === 'CONNECTION_ERROR'
+                    ? 'text-yellow-800 dark:text-yellow-300'
+                    : 'text-red-800 dark:text-red-300'
+                }`}>
+                  {errorInfo?.code === 'TIMEOUT' ? 'Request Timed Out' :
+                   errorInfo?.code === 'OFFLINE' ? 'You\'re Offline' :
+                   errorInfo?.code === 'CONNECTION_ERROR' ? 'Connection Error' :
+                   errorInfo?.code === 'RATE_LIMIT' ? 'Too Many Requests' :
+                   'Something went wrong'}
+                </h3>
+                <p className={`mt-1 ${
+                  errorInfo?.code === 'OFFLINE' || errorInfo?.code === 'CONNECTION_ERROR'
+                    ? 'text-yellow-600 dark:text-yellow-400'
+                    : 'text-red-600 dark:text-red-400'
+                }`}>{error}</p>
+                {errorInfo?.retryable && currentQuestion && (
+                  <button
+                    onClick={() => handleQuestionSubmit(currentQuestion)}
+                    disabled={isOffline}
+                    className={`mt-3 px-4 py-2 rounded-lg transition-colors text-sm font-medium ${
+                      isOffline
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : errorInfo?.code === 'OFFLINE' || errorInfo?.code === 'CONNECTION_ERROR'
+                          ? 'bg-yellow-600 text-white hover:bg-yellow-700'
+                          : 'bg-red-600 text-white hover:bg-red-700'
+                    }`}
+                  >
+                    {isOffline ? 'Waiting for connection...' : 'Try Again'}
+                  </button>
+                )}
               </div>
             </div>
           </div>

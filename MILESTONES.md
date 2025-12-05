@@ -117,17 +117,26 @@
 - Your preference is saved in your browser
 - It also respects your system's dark mode setting by default
 
+### Milestone 8: Enhanced Error Handling & Retry Logic
+**Status**: Completed
+
+**What we added:**
+- Smart retry logic with exponential backoff (up to 3 retries)
+- 30-second request timeout to prevent hanging
+- Offline detection with a yellow banner at the top
+- Contextual error messages (timeout, offline, rate limit, server error)
+- Color-coded error displays (yellow for connection issues, red for other errors)
+- Retry button only shows for retryable errors
+
+**Technical details:**
+- Backend: Added `fetchWithRetry` and `fetchWithTimeout` helper functions
+- Backend: Categorized errors with codes (TIMEOUT, RATE_LIMIT, NETWORK_ERROR, etc.)
+- Frontend: Added `isOffline` state with online/offline event listeners
+- Frontend: Enhanced error display with different styles for different error types
+
 ---
 
 ## Upcoming Milestones
-
-### Milestone 8: Enhanced Error Handling & Retry Logic
-**Priority**: Low
-
-- [ ] Add exponential backoff for API failures
-- [ ] Show more helpful error messages
-- [ ] Add offline detection and messaging
-- [ ] Implement request timeout handling
 
 ### Milestone 9: Deployment
 **Priority**: Low
