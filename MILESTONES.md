@@ -212,6 +212,30 @@
 - `signing-key-info.txt` - Signing key passwords
 - `assetlinks.json` - TWA verification file (already deployed)
 
+### Milestone 11: Mobile-First UI Optimization
+**Status**: Completed
+
+**What we added:**
+- Complete mobile-first redesign of all components
+- App now looks and feels native on phones
+- Safe area support for notched phones (iPhone X+, etc.)
+- Touch-optimized buttons (minimum 44px touch targets)
+- Better typography scaling for mobile screens
+
+**Key changes:**
+- **App.jsx**: Compact header, reduced padding, dynamic viewport height
+- **QuestionInput.jsx**: Full-width submit button, horizontal scrolling example questions, hidden keyboard hints on mobile
+- **ResponseDisplay.jsx**: Horizontal scrolling badges, compact cards, full-width buttons
+- **StepCard.jsx**: Smaller badges, full-width reveal buttons, compact answer sections
+- **HistorySidebar.jsx**: Full-width on mobile, safe area padding
+- **index.css**: Safe area utilities, hidden scrollbars, smooth touch scrolling
+- **index.html**: Added `viewport-fit=cover` for safe area support
+
+**Mobile-first approach:**
+- Smaller sizes by default (`text-sm`, `p-3`, etc.)
+- Larger sizes on desktop (`sm:text-base`, `sm:p-5`, etc.)
+- Uses Tailwind responsive breakpoints (`sm:` prefix)
+
 ---
 
 ## Important Files & Credentials
