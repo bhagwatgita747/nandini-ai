@@ -256,7 +256,7 @@
 - Frontend: Added file input with `capture="environment"` for mobile camera
 - Image converted to base64 and sent to backend
 - Backend automatically switches to vision model when image is present
-- Vision model: `grok-2-vision-1212` for images, `grok-4-fast-non-reasoning` for text
+- Uses `grok-4-fast-non-reasoning` for both text and images (supports vision)
 - Maximum image size: 10MB (compressed to base64)
 - Increased serverless function memory for handling larger payloads
 

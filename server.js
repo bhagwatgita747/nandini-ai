@@ -208,9 +208,9 @@ app.post('/api/ask', async (req, res) => {
       });
     }
 
-    // Determine which model to use based on whether an image is present
+    // Use grok-4-fast-non-reasoning for both text and vision
     const hasImage = !!image;
-    const model = hasImage ? 'grok-2-vision-1212' : 'grok-4-fast-non-reasoning';
+    const model = 'grok-4-fast-non-reasoning';
 
     // Build the user message content
     let userContent;
