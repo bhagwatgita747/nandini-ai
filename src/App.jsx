@@ -35,7 +35,7 @@ function App() {
     };
   }, []);
 
-  const handleQuestionSubmit = async (question) => {
+  const handleQuestionSubmit = async (question, imageBase64 = null) => {
     // Check if offline
     if (isOffline) {
       setError('You are offline. Please check your internet connection.');
@@ -44,18 +44,23 @@ function App() {
     }
 
     setIsLoading(true);
-    setCurrentQuestion(question);
+    setCurrentQuestion(question || (imageBase64 ? 'Analyze this image' : ''));
     setResponse(null);
     setError(null);
     setErrorInfo(null);
 
     try {
+      const requestBody = { question: question || 'Solve the problem shown in this image' };
+      if (imageBase64) {
+        requestBody.image = imageBase64;
+      }
+
       const res = await fetch(`${API_URL}/api/ask`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question }),
+        body: JSON.stringify(requestBody),
       });
 
       const data = await res.json();

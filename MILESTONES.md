@@ -236,6 +236,37 @@
 - Larger sizes on desktop (`sm:text-base`, `sm:p-5`, etc.)
 - Uses Tailwind responsive breakpoints (`sm:` prefix)
 
+### Milestone 12: Photo Capture & Image Analysis
+**Status**: Completed
+
+**What we added:**
+- Students can now take a photo of a question and get step-by-step solutions
+- Camera button inside the text input field
+- Image preview before submission with remove option
+- Works with both camera capture and file upload from gallery
+- Uses Grok Vision AI (grok-2-vision-1212) to analyze images
+
+**How to use:**
+1. Tap the camera icon in the input field
+2. Take a photo of your question or select from gallery
+3. Optionally add a text question about the image
+4. Tap "Ask AI" to get step-by-step analysis
+
+**Technical details:**
+- Frontend: Added file input with `capture="environment"` for mobile camera
+- Image converted to base64 and sent to backend
+- Backend automatically switches to vision model when image is present
+- Vision model: `grok-2-vision-1212` for images, `grok-4-fast-non-reasoning` for text
+- Maximum image size: 10MB (compressed to base64)
+- Increased serverless function memory for handling larger payloads
+
+**Files modified:**
+- `src/components/QuestionInput.jsx` - Added camera button, file input, image preview
+- `src/App.jsx` - Updated to handle image parameter in submission
+- `api/ask.js` - Added vision model support with image handling
+- `server.js` - Updated local server with image support and larger body limit
+- `vercel.json` - Increased function memory for image processing
+
 ---
 
 ## Important Files & Credentials

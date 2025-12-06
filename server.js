@@ -16,7 +16,7 @@ const CONFIG = {
 };
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' })); // Increase limit for base64 images
 
 // Helper: Sleep function for delays
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -198,14 +198,38 @@ IMPORTANT: Output ONLY the JSON object. No markdown, no code blocks, no explanat
 // API endpoint for asking questions
 app.post('/api/ask', async (req, res) => {
   try {
-    const { question } = req.body;
+    const { question, image } = req.body;
 
-    if (!question || typeof question !== 'string' || question.trim() === '') {
+    if (!question && !image) {
       return res.status(400).json({
-        error: 'Question is required',
+        error: 'Question or image is required',
         code: 'VALIDATION_ERROR',
         retryable: false
       });
+    }
+
+    // Determine which model to use based on whether an image is present
+    const hasImage = !!image;
+    const model = hasImage ? 'grok-2-vision-1212' : 'grok-4-fast-non-reasoning';
+
+    // Build the user message content
+    let userContent;
+    if (hasImage) {
+      // Vision model requires content as an array
+      userContent = [
+        {
+          type: 'text',
+          text: question || 'Analyze this image and solve any problems shown. Explain step by step.'
+        },
+        {
+          type: 'image_url',
+          image_url: {
+            url: image // Base64 data URL (e.g., "data:image/jpeg;base64,...")
+          }
+        }
+      ];
+    } else {
+      userContent = question;
     }
 
     let response;
@@ -217,7 +241,7 @@ app.post('/api/ask', async (req, res) => {
           'Authorization': `Bearer ${process.env.XAI_API_KEY}`
         },
         body: JSON.stringify({
-          model: 'grok-4-fast-non-reasoning',  // Grok 4 fast without reasoning for speed
+          model: model,
           messages: [
             {
               role: 'system',
@@ -225,7 +249,7 @@ app.post('/api/ask', async (req, res) => {
             },
             {
               role: 'user',
-              content: question
+              content: userContent
             }
           ],
           temperature: 0.7,
